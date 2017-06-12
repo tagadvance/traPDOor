@@ -1,0 +1,19 @@
+{
+	"name" : "tagadvance/trapdoor",
+	"description" : "...",
+	"type" : "project",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Tag",
+			"email" : "tagadvance@gmail.com"
+		}
+	],
+	"require" : {
+		"phpunit/phpunit" : "^6.1"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"" : "src/"
+		}
+	}
+}
