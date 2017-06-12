@@ -2,6 +2,7 @@
 	"name" : "tagadvance/trapdoor",
 	"description" : "...",
 	"type" : "project",
+	"keywords": ["PDO"],
 	"license" : "MIT",
 	"authors" : [{
 			"name" : "Tag",
