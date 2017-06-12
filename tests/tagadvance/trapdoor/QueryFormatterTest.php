@@ -10,10 +10,10 @@ class QueryFormatterTest extends TestCase {
 		$expected = 'SELECT * FROM foo.bar WHERE a = 1 AND b = "two" AND c = 3';
 		
 		$sql = 'SELECT * FROM foo.bar WHERE a = ? AND b = ? AND c = ?';
-		$bindings = [ 
-				1,
-				'two',
-				3 
+		$bindings = [
+				3 => 3,
+				2 => 'two',
+				1 => 1,
 		];
 		$actual = QueryFormatter::prepareQueryString ( $sql, $bindings );
 		
