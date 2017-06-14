@@ -1,6 +1,19 @@
 # traPDOor
 This library acts as an extension for PHP Data Objects ([PDO](http://php.net/manual/en/book.pdo.php)). Basically, it makes prepared SQL queries accessible. This is useful for debug-level logging.
 
+## Download / Install
+The easiest way to install traPDOor is via Composer:
+```bash
+composer require "tagadvance/trapdoor:dev-master"
+```
+```json
+{
+    "require": {
+        "tagadvance/trapdoor": "dev-master"
+    }
+}
+```
+
 ## Example
 ```php
 $pdo = new TraPDO($dsn);
