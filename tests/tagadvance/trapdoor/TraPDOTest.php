@@ -8,7 +8,7 @@ class TraPDOTest extends TestCase {
 
     private $pdo;
 
-    function setUp() {
+    function setUp(): void {
         $dsn = 'sqlite::memory:';
         $this->pdo = new TraPDO($dsn);
     }
