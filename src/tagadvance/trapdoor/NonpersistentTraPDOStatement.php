@@ -15,17 +15,17 @@ class NonpersistentTraPDOStatement extends \PDOStatement implements TraPDOStatem
         $this->pdo = $pdo;
     }
 
-    function bindColumn($column, &$parameter, $type = null, $length = null, $driver_options = null) {
+    function bindColumn($column, &$parameter, $type = null, $length = null, $driver_options = null): bool {
         $this->bindings[$column] = $parameter;
         return parent::bindColumn($column, $parameter, $type, $length, $driver_options);
     }
 
-    function bindParam($parameter, &$variable, $type = null, $length = null, $driver_options = null) {
+    function bindParam($parameter, &$variable, $type = null, $length = null, $driver_options = null): bool {
         $this->bindings[$parameter] = $variable;
         return parent::bindParam($parameter, $variable, $type, $length, $driver_options);
     }
 
-    function bindValue($parameter, $variable, $type = null) {
+    function bindValue($parameter, $variable, $type = null): bool {
         $this->bindings[$parameter] = $variable;
         return parent::bindValue($parameter, $variable, $type);
     }

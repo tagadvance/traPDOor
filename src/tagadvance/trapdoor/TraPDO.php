@@ -20,8 +20,9 @@ class TraPDO extends \PDO {
         }
     }
 
-    function prepare($statement, $driver_options = null) {
-        $statement = call_user_func_array('parent::prepare', func_get_args());
+    function prepare($statement, $driver_options = null): \PDOStatement|false {
+		$args = func_get_args();
+        $statement = parent::prepare($args[0], $args[1] ?? []);
         if ($statement !== false && $this->isPersistent()) {
             return new PersistentTrapPDOStatement($statement);
         }
