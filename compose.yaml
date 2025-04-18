@@ -1,0 +1,13 @@
+services:
+  composer-update:
+    build: ./
+    volumes:
+      - ./:/opt/traPDOor
+    working_dir: /opt/traPDOor
+    entrypoint: ["composer", "update"]
+  test:
+    build: ./
+    volumes:
+      - ./:/opt/traPDOor
+    working_dir: /opt/traPDOor
+    entrypoint: ["./vendor/bin/phpunit", "tests"]
