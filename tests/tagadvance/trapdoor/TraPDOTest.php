@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class TraPDOTest extends TestCase {
 
-    private $pdo;
+    private \PDO $pdo;
 
     function setUp(): void {
         $dsn = 'sqlite::memory:';

@@ -2,49 +2,64 @@
 
 namespace tagadvance\trapdoor;
 
-class PersistentTrapPDOStatement implements TraPDOStatement {
+use PDOStatement;
 
-    protected $statement;
+class PersistentTrapPDOStatement extends PDOStatement implements TraPDOStatement
+{
 
-    private $bindings = [];
+	protected PDOStatement $statement;
 
-    function __construct(\PDOStatement $statement) {
-        $this->statement = $statement;
-    }
+	private array $bindings = [];
 
-    public function __get($name) {
-        return $this->statement->$name;
-    }
+	function __construct(PDOStatement $statement)
+	{
+		$this->statement = $statement;
+	}
 
-    public function __call($name, $arguments) {
-        $callback = [
-                $this->statement,
-                $name
-        ];
-        return call_user_func_array($callback, $arguments);
-    }
+	public function __get($name)
+	{
+		return $this->statement->$name;
+	}
 
-    function bindColumn($column, &$parameter, $type = null, $length = null, $driver_options = null) {
-        $this->bindings[$column] = $parameter;
-        return $statement->bindColumn($column, $parameter, $type, $length, $driver_options);
-    }
+	public function __call($name, $arguments)
+	{
+		$callback = [
+			$this->statement,
+			$name
+		];
 
-    function bindParam($parameter, &$variable, $data_type = null, $length = null, $driver_options = null) {
-        $this->bindings[$parameter] = $variable;
-        return $statement->bindParam($parameter, $variable, $data_type, $length, $driver_options);
-    }
+		return call_user_func_array($callback, $arguments);
+	}
 
-    function bindValue($parameter, $variable, $data_type = null) {
-        $this->bindings[$parameter] = $variable;
-        return $statement->bindValue($parameter, $variable, $data_type);
-    }
+	function bindColumn($column, &$var, $type = null, $maxLength = null, $driverOptions = null): bool
+	{
+		$this->bindings[$column] = $var;
 
-    function getPreparedQueryString(): string {
-        return QueryFormatter::prepareQueryString($this->queryString, $this->bindings);
-    }
+		return $this->statement->bindColumn($column, $var, $type, $maxLength, $driverOptions);
+	}
 
-    function __destruct() {
-        unset($this->statement, $this->bindings);
-    }
+	function bindParam($param, &$var, $type = null, $maxLength = null, $driverOptions = null): bool
+	{
+		$this->bindings[$param] = $var;
+
+		return $this->statement->bindParam($param, $var, $type, $maxLength, $driverOptions);
+	}
+
+	function bindValue($param, $value, $type = null): bool
+	{
+		$this->bindings[$param] = $value;
+
+		return $this->statement->bindValue($param, $value, $type);
+	}
+
+	function getPreparedQueryString(): string
+	{
+		return QueryFormatter::prepareQueryString($this->queryString, $this->bindings);
+	}
+
+	function __destruct()
+	{
+		unset($this->statement, $this->bindings);
+	}
 
 }

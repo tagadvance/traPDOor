@@ -2,40 +2,49 @@
 
 namespace tagadvance\trapdoor;
 
+use PDOStatement;
+
 /**
  * Can NOT be used with persistent PDO instances.
  */
-class NonpersistentTraPDOStatement extends \PDOStatement implements TraPDOStatement {
+class NonpersistentTraPDOStatement extends PDOStatement implements TraPDOStatement
+{
 
-    private $pdo;
+	private array $bindings = [];
 
-    private $bindings = [];
+	protected function __construct()
+	{
+	}
 
-    protected function __construct(\PDO $pdo) {
-        $this->pdo = $pdo;
-    }
+	function bindColumn($column, &$var, $type = null, $maxLength = null, $driverOptions = null): bool
+	{
+		$this->bindings[$column] = $var;
 
-    function bindColumn($column, &$parameter, $type = null, $length = null, $driver_options = null): bool {
-        $this->bindings[$column] = $parameter;
-        return parent::bindColumn($column, $parameter, $type, $length, $driver_options);
-    }
+		return parent::bindColumn($column, $var, $type, $maxLength, $driverOptions);
+	}
 
-    function bindParam($parameter, &$variable, $type = null, $length = null, $driver_options = null): bool {
-        $this->bindings[$parameter] = $variable;
-        return parent::bindParam($parameter, $variable, $type, $length, $driver_options);
-    }
+	function bindParam($param, &$var, $type = null, $maxLength = null, $driverOptions = null): bool
+	{
+		$this->bindings[$param] = $var;
 
-    function bindValue($parameter, $variable, $type = null): bool {
-        $this->bindings[$parameter] = $variable;
-        return parent::bindValue($parameter, $variable, $type);
-    }
+		return parent::bindParam($param, $var, $type, $maxLength, $driverOptions);
+	}
 
-    function getPreparedQueryString(): string {
-        return QueryFormatter::prepareQueryString($this->queryString, $this->bindings);
-    }
+	function bindValue($param, $value, $type = null): bool
+	{
+		$this->bindings[$param] = $value;
 
-    function __destruct() {
-        unset($this->pdo, $this->bindings);
-    }
+		return parent::bindValue($param, $value, $type);
+	}
+
+	function getPreparedQueryString(): string
+	{
+		return QueryFormatter::prepareQueryString($this->queryString, $this->bindings);
+	}
+
+	function __destruct()
+	{
+		unset($this->bindings);
+	}
 
 }
