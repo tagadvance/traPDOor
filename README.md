@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/tagadvance/traPDOor.svg?branch=master)](https://travis-ci.org/tagadvance/traPDOor)
+[![CI](https://github.com/tagadvance/traPDOor/actions/workflows/ci.yml/badge.svg)](https://github.com/tagadvance/traPDOor/actions/workflows/ci.yml)
+[![PHP](https://img.shields.io/badge/php-%3E%3D8.4-777bb4.svg)](https://www.php.net/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 # traPDOor
 This library acts as an extension for PHP Data Objects ([PDO](http://php.net/manual/en/book.pdo.php)). Basically, it makes prepared SQL queries accessible. This is useful for debug-level logging.
