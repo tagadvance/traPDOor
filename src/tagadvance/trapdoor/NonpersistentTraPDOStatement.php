@@ -39,9 +39,4 @@ class NonpersistentTraPDOStatement extends PDOStatement implements TraPDOStateme
         return QueryFormatter::prepareQueryString($this->queryString, $this->bindings);
     }
 
-    public function __destruct()
-    {
-        unset($this->bindings);
-    }
-
 }

@@ -56,9 +56,4 @@ class PersistentTrapPDOStatement extends PDOStatement implements TraPDOStatement
         return QueryFormatter::prepareQueryString($this->queryString, $this->bindings);
     }
 
-    public function __destruct()
-    {
-        unset($this->statement, $this->bindings);
-    }
-
 }
