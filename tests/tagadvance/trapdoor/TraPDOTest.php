@@ -2,11 +2,12 @@
 
 namespace tagadvance\trapdoor;
 
+use PDO;
 use PHPUnit\Framework\TestCase;
 
 class TraPDOTest extends TestCase
 {
-    private \PDO $pdo;
+    private PDO $pdo;
 
     public function setUp(): void
     {
@@ -16,7 +17,7 @@ class TraPDOTest extends TestCase
 
     public function testConstructor()
     {
-        $this->assertNotNull($this->pdo);
+        $this->assertSame('sqlite', $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME));
     }
 
     public function testGetPreparedQueryStringUsingQuestionMarkPlaceholders()
@@ -27,6 +28,7 @@ class TraPDOTest extends TestCase
 
         $sql = 'SELECT * FROM foo WHERE a = ? AND b = ? AND c = ?';
         $statement = $this->pdo->prepare($sql);
+        $this->assertInstanceOf(TraPDOStatement::class, $statement);
         $statement->bindValue(3, 'three');
         $statement->bindValue(2, 2);
         $statement->bindValue(1, 'one');
@@ -43,6 +45,7 @@ class TraPDOTest extends TestCase
 
         $sql = 'SELECT * FROM foo WHERE a = :a AND b = :b AND c = :c';
         $statement = $this->pdo->prepare($sql);
+        $this->assertInstanceOf(TraPDOStatement::class, $statement);
         $statement->bindValue(':a', 'one');
         $statement->bindValue(':b', 2);
         $statement->bindValue(':c', 'three');
