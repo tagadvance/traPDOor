@@ -34,3 +34,6 @@ $log->debug($preparedQueryString);
 ```bash
 wget -q -O - https://raw.githubusercontent.com/dwyl/english-words/master/words.txt | grep ".*p.*d.*o.*" | awk 'length($0) <= 8' | less
 ```
+
+## Sponsor
+If you find this library useful, please consider [sponsoring](https://github.com/sponsors/tagadvance).
