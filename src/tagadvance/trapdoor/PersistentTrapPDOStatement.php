@@ -54,7 +54,9 @@ class PersistentTrapPDOStatement extends PDOStatement implements TraPDOStatement
 
     public function getPreparedQueryString(): string
     {
-        return QueryFormatter::prepareQueryString($this->queryString, $this->bindings);
+        // $queryString is declared by PDOStatement, so __get() never fires for
+        // it and this class's own copy is never initialized.
+        return QueryFormatter::prepareQueryString($this->statement->queryString, $this->bindings);
     }
 
 }
