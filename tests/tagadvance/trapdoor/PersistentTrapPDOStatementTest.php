@@ -31,4 +31,30 @@ class PersistentTrapPDOStatementTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+
+    public function testGetPreparedQueryStringReflectsBindParamByReference()
+    {
+        $expected = 'SELECT * FROM foo WHERE a = "after"';
+
+        $sql = 'SELECT * FROM foo WHERE a = :a';
+        $statement = new PersistentTrapPDOStatement($this->pdo->prepare($sql));
+        $value = 'before';
+        $statement->bindParam(':a', $value);
+        $value = 'after';
+        $actual = $statement->getPreparedQueryString();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testBindValueDoesNotOverwriteAVariableBoundByBindParam()
+    {
+        $sql = 'SELECT * FROM foo WHERE a = :a';
+        $statement = new PersistentTrapPDOStatement($this->pdo->prepare($sql));
+        $value = 'bound';
+        $statement->bindParam(':a', $value);
+        $statement->bindValue(':a', 'other');
+
+        $this->assertSame('bound', $value);
+    }
+
 }

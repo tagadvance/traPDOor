@@ -16,6 +16,8 @@ class NonpersistentTraPDOStatement extends PDOStatement implements TraPDOStateme
 
     public function bindColumn($column, &$var, $type = null, $maxLength = null, $driverOptions = null): bool
     {
+        // Break any reference left in this slot by bindParam().
+        unset($this->bindings[$column]);
         $this->bindings[$column] = $var;
 
         return parent::bindColumn($column, $var, $type, $maxLength, $driverOptions);
@@ -23,13 +25,14 @@ class NonpersistentTraPDOStatement extends PDOStatement implements TraPDOStateme
 
     public function bindParam($param, &$var, $type = PDO::PARAM_STR, $maxLength = 0, $driverOptions = null): bool
     {
-        $this->bindings[$param] = $var;
+        $this->bindings[$param] = &$var;
 
         return parent::bindParam($param, $var, $type, $maxLength, $driverOptions);
     }
 
     public function bindValue($param, $value, $type = PDO::PARAM_STR): bool
     {
+        unset($this->bindings[$param]);
         $this->bindings[$param] = $value;
 
         return parent::bindValue($param, $value, $type);

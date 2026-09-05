@@ -54,4 +54,34 @@ class TraPDOTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+
+    public function testGetPreparedQueryStringReflectsBindParamByReference()
+    {
+        $this->pdo->exec('CREATE TABLE foo (a TEXT);');
+
+        $expected = 'SELECT * FROM foo WHERE a = "after"';
+
+        $statement = $this->pdo->prepare('SELECT * FROM foo WHERE a = :a');
+        $this->assertInstanceOf(TraPDOStatement::class, $statement);
+        $value = 'before';
+        $statement->bindParam(':a', $value);
+        $value = 'after';
+        $actual = $statement->getPreparedQueryString();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testBindValueDoesNotOverwriteAVariableBoundByBindParam()
+    {
+        $this->pdo->exec('CREATE TABLE foo (a TEXT);');
+
+        $statement = $this->pdo->prepare('SELECT * FROM foo WHERE a = :a');
+        $this->assertInstanceOf(TraPDOStatement::class, $statement);
+        $value = 'bound';
+        $statement->bindParam(':a', $value);
+        $statement->bindValue(':a', 'other');
+
+        $this->assertSame('bound', $value);
+    }
+
 }
