@@ -9,42 +9,39 @@ use PDOStatement;
  */
 class NonpersistentTraPDOStatement extends PDOStatement implements TraPDOStatement
 {
+    private array $bindings = [];
 
-	private array $bindings = [];
+    protected function __construct() {}
 
-	protected function __construct()
-	{
-	}
+    public function bindColumn($column, &$var, $type = null, $maxLength = null, $driverOptions = null): bool
+    {
+        $this->bindings[$column] = $var;
 
-	function bindColumn($column, &$var, $type = null, $maxLength = null, $driverOptions = null): bool
-	{
-		$this->bindings[$column] = $var;
+        return parent::bindColumn($column, $var, $type, $maxLength, $driverOptions);
+    }
 
-		return parent::bindColumn($column, $var, $type, $maxLength, $driverOptions);
-	}
+    public function bindParam($param, &$var, $type = null, $maxLength = null, $driverOptions = null): bool
+    {
+        $this->bindings[$param] = $var;
 
-	function bindParam($param, &$var, $type = null, $maxLength = null, $driverOptions = null): bool
-	{
-		$this->bindings[$param] = $var;
+        return parent::bindParam($param, $var, $type, $maxLength, $driverOptions);
+    }
 
-		return parent::bindParam($param, $var, $type, $maxLength, $driverOptions);
-	}
+    public function bindValue($param, $value, $type = null): bool
+    {
+        $this->bindings[$param] = $value;
 
-	function bindValue($param, $value, $type = null): bool
-	{
-		$this->bindings[$param] = $value;
+        return parent::bindValue($param, $value, $type);
+    }
 
-		return parent::bindValue($param, $value, $type);
-	}
+    public function getPreparedQueryString(): string
+    {
+        return QueryFormatter::prepareQueryString($this->queryString, $this->bindings);
+    }
 
-	function getPreparedQueryString(): string
-	{
-		return QueryFormatter::prepareQueryString($this->queryString, $this->bindings);
-	}
-
-	function __destruct()
-	{
-		unset($this->bindings);
-	}
+    public function __destruct()
+    {
+        unset($this->bindings);
+    }
 
 }

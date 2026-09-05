@@ -4,33 +4,35 @@ namespace tagadvance\trapdoor;
 
 use PHPUnit\Framework\TestCase;
 
-class QueryFormatterTest extends TestCase {
-
-    function testPrepareQueryStringUsingQuestionMarkPlaceholders() {
+class QueryFormatterTest extends TestCase
+{
+    public function testPrepareQueryStringUsingQuestionMarkPlaceholders()
+    {
         $expected = 'SELECT * FROM foo.bar WHERE a = 1 AND b = "two" AND c = 3';
-        
+
         $sql = 'SELECT * FROM foo.bar WHERE a = ? AND b = ? AND c = ?';
         $bindings = [
-                3 => 3,
-                2 => 'two',
-                1 => 1
+            3 => 3,
+            2 => 'two',
+            1 => 1,
         ];
         $actual = QueryFormatter::prepareQueryString($sql, $bindings);
-        
+
         $this->assertEquals($expected, $actual);
     }
 
-    function testPrepareQueryStringUsingParameterNames() {
+    public function testPrepareQueryStringUsingParameterNames()
+    {
         $expected = 'SELECT * FROM foo.bar WHERE a = 1 AND b = "two" AND c = 3';
-        
+
         $sql = 'SELECT * FROM foo.bar WHERE a = :a AND b = :b AND c = :c';
         $bindings = [
-                ':a' => 1,
-                ':b' => 'two',
-                ':c' => 3
+            ':a' => 1,
+            ':b' => 'two',
+            ':c' => 3,
         ];
         $actual = QueryFormatter::prepareQueryString($sql, $bindings);
-        
+
         $this->assertEquals($expected, $actual);
     }
 
