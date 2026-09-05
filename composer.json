@@ -1,8 +1,8 @@
 {
 	"name" : "tagadvance/trapdoor",
-	"description" : "...",
-	"type" : "project",
-	"keywords": ["PDO"],
+	"description" : "A PDO extension that renders prepared queries with their bound values for debug-level logging.",
+	"type" : "library",
+	"keywords": ["pdo", "sql", "database", "debug", "logging", "prepared-statement"],
 	"license" : "MIT",
 	"authors" : [{
 			"name" : "Tag",
