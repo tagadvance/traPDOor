@@ -1,4 +1,5 @@
 [![CI](https://github.com/tagadvance/traPDOor/actions/workflows/ci.yml/badge.svg)](https://github.com/tagadvance/traPDOor/actions/workflows/ci.yml)
+[![Packagist](https://img.shields.io/packagist/v/tagadvance/trapdoor.svg)](https://packagist.org/packages/tagadvance/trapdoor)
 [![PHP](https://img.shields.io/badge/php-%3E%3D8.4-777bb4.svg)](https://www.php.net/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
@@ -8,12 +9,12 @@ This library acts as an extension for PHP Data Objects ([PDO](http://php.net/man
 ## Download / Install
 The easiest way to install traPDOor is via Composer:
 ```bash
-composer require "tagadvance/trapdoor:dev-master"
+composer require "tagadvance/trapdoor:^1.0"
 ```
 ```json
 {
     "require": {
-        "tagadvance/trapdoor": "dev-master"
+        "tagadvance/trapdoor": "^1.0"
     }
 }
 ```
