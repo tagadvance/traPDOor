@@ -8,25 +8,33 @@ class QueryFormatter
 
     public static function prepareQueryString(string $queryString, array $bindings): string
     {
-        $needle = '?';
-        $length = strlen($needle);
-
-        ksort($bindings);
-        $i = 1;
+        $positional = [];
+        $named = [];
         foreach ($bindings as $parameter => $variable) {
-            $value = is_numeric($variable) ? $variable : "\"$variable\"";
-            if (is_numeric($parameter) && $i == $parameter) {
-                $position = strpos($queryString, $needle);
-                if ($position !== false) {
-                    $queryString = substr_replace($queryString, $value, $position, $length);
-                }
+            $value = is_numeric($variable) ? (string) $variable : "\"$variable\"";
+            if (is_int($parameter)) {
+                $positional[$parameter] = $value;
             } else {
-                $queryString = str_replace($parameter, $value, $queryString);
+                // PDO accepts a named parameter with or without its leading colon.
+                $named[ltrim($parameter, ':')] = $value;
             }
-            $i++;
         }
 
-        return $queryString;
+        $ordinal = 0;
+        $substitute = function (array $matches) use ($positional, $named, &$ordinal): string {
+            $placeholder = $matches[0];
+            if ($placeholder === '?') {
+                $ordinal++;
+
+                return $positional[$ordinal] ?? $placeholder;
+            }
+
+            return $named[substr($placeholder, 1)] ?? $placeholder;
+        };
+
+        // One pass, so a substituted value is never rescanned and :a is never
+        // matched inside :ab.
+        return preg_replace_callback('/\?|:\w+/', $substitute, $queryString);
     }
 
 }

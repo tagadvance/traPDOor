@@ -36,4 +36,59 @@ class QueryFormatterTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+
+    public function testPrepareQueryStringDoesNotRescanSubstitutedValues()
+    {
+        $expected = 'SELECT * FROM foo.bar WHERE a = "wh?t" AND b = "two"';
+
+        $sql = 'SELECT * FROM foo.bar WHERE a = ? AND b = ?';
+        $bindings = [
+            1 => 'wh?t',
+            2 => 'two',
+        ];
+        $actual = QueryFormatter::prepareQueryString($sql, $bindings);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testPrepareQueryStringDoesNotSubstituteInsideALongerParameterName()
+    {
+        $expected = 'SELECT * FROM foo.bar WHERE a = 1 AND ab = 2';
+
+        $sql = 'SELECT * FROM foo.bar WHERE a = :a AND ab = :ab';
+        $bindings = [
+            ':a' => 1,
+            ':ab' => 2,
+        ];
+        $actual = QueryFormatter::prepareQueryString($sql, $bindings);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testPrepareQueryStringWithNoncontiguousPositionalBindings()
+    {
+        $expected = 'SELECT * FROM foo.bar WHERE a = ? AND b = "two" LIMIT 2';
+
+        $sql = 'SELECT * FROM foo.bar WHERE a = ? AND b = ? LIMIT 2';
+        $bindings = [
+            2 => 'two',
+        ];
+        $actual = QueryFormatter::prepareQueryString($sql, $bindings);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testPrepareQueryStringUsingParameterNamesWithoutALeadingColon()
+    {
+        $expected = 'SELECT * FROM foo.bar WHERE a = "one"';
+
+        $sql = 'SELECT * FROM foo.bar WHERE a = :a';
+        $bindings = [
+            'a' => 'one',
+        ];
+        $actual = QueryFormatter::prepareQueryString($sql, $bindings);
+
+        $this->assertEquals($expected, $actual);
+    }
+
 }
