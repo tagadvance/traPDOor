@@ -2,6 +2,7 @@
 
 namespace tagadvance\trapdoor;
 
+use PDO;
 use PDOStatement;
 
 class PersistentTrapPDOStatement extends PDOStatement implements TraPDOStatement
@@ -37,14 +38,14 @@ class PersistentTrapPDOStatement extends PDOStatement implements TraPDOStatement
         return $this->statement->bindColumn($column, $var, $type, $maxLength, $driverOptions);
     }
 
-    public function bindParam($param, &$var, $type = null, $maxLength = null, $driverOptions = null): bool
+    public function bindParam($param, &$var, $type = PDO::PARAM_STR, $maxLength = 0, $driverOptions = null): bool
     {
         $this->bindings[$param] = $var;
 
         return $this->statement->bindParam($param, $var, $type, $maxLength, $driverOptions);
     }
 
-    public function bindValue($param, $value, $type = null): bool
+    public function bindValue($param, $value, $type = PDO::PARAM_STR): bool
     {
         $this->bindings[$param] = $value;
 
